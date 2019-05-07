@@ -14,6 +14,7 @@ class Tag(models.Model):
     def get_absolute_url(self):
         return 'tag/{}/'.format(self.slug)
 
+
 class Category(models.Model):
     name = models.CharField(max_length=100, db_index=True)
     slug = models.SlugField(max_length=200, unique=True, allow_unicode=True)
@@ -25,8 +26,8 @@ class Category(models.Model):
     def __str__(self):
         return self.name
 
-    def get_absolute_url(self):
-        return reverse('item_in_category', args=[self.slug])
+    # def get_absolute_url(self):
+    #     return reverse('item_in_category', args=[self.slug])
 
 
 class Post(models.Model):

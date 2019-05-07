@@ -6,27 +6,29 @@ from django.views.generic import (
 from .models import Post, Category
 
 
-def item_in_category(request, category_slug=None):
-
-    current_category = None
-    categories = Category.objects.all()
-    items = Post.objects.all()
-
-    if category_slug:
-        current_category = get_object_or_404(Category, slug=category_slug)
-        items = items.filter(category=current_category)
-
-    context = {
-        'current_category': current_category,
-        'category_list': categories,
-        'items': items
-    }
-    return render(request, 'blog/home.html', context)
+# def item_in_category(request, category_slug=None):
+#
+#     current_category = None
+#     categories = Category.objects.all()
+#     items = Post.objects.all()
+#
+#     if category_slug:
+#         current_category = get_object_or_404(Category, slug=category_slug)
+#         items = items.filter(category=current_category)
+#
+#     context = {
+#         'current_category': current_category,
+#         'category_list': categories,
+#         'items': items
+#     }
+#     return render(request, 'blog/home.html', context)
 
 
 # def item_in_tag(request, tag_slug=None):
-#
-#     items = tag_slug.post_set.order_by('-date_posted')
+#     if tag_slug:
+#         items = tag_slug.post_set.order_by('-date_posted')
+#     else:
+#         items = Post.objects.all()
 #
 #     context = {
 #         'items': items
@@ -34,49 +36,34 @@ def item_in_category(request, category_slug=None):
 #     return render(request, 'blog/home.html', context)
 
 
-def home(request):
-    context = {
-        'posts': Post.objects.all(),
-        'categories': Category.objects.all(),
-    }
-
-    return render(request, 'blog/home.html', context)
-
-
 class PostListView(ListView):
     model = Post
     template_name = 'blog/home.html'
-
-    def get_queryset(self):
-        return Post.objects.all()
+    context_object_name = 'posts'
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super(PostListView, self).get_context_data(**kwargs)
         context['category_list'] = Category.objects.all()
 
         return context
+    # context = {
+    #     'posts': Post.objects.all(),
+    #     'category_list': Category.objects.all()
+    #
+    # }
+    # ordering = ['-date_posted']
 
 
 class PostListByCategory(PostListView):
 
     def get_queryset(self):
         slug = self.kwargs['slug']
+        # print("slug")
+        # print(slug)
         category = Category.objects.get(slug=slug)
         return Post.objects.filter(category=category).order_by('-date_posted')
 
-#     return Post.objects
-
-
-# class PostListView(ListView):
-#     model = Post
-#     template_name = 'blog/home.html'
-#     # context_object_name = 'posts'
-#     context = {
-#         'posts': Post.objects.all(),
-#
-#     }
-#     ordering = ['-date_posted']
-
+    # return Post.objects
 
 
 class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
