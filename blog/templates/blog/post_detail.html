@@ -25,6 +25,16 @@
         </div>
         <h2 class="article-title">{{ object.title }}</h2>
         <p class="article-content">{{ object.content }}</p>
+        <p>Tags :&nbsp;
+            {% for t in object.tags.all %}
+                #{{ t }} &nbsp;
+            {% endfor %}
+        </p>
+    </div>
+    <div id="comment-list">
+
     </div>
 </article>
+
+
 {% endblock content %}

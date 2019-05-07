@@ -24,6 +24,16 @@ def item_in_category(request, category_slug=None):
     return render(request, 'blog/home.html', context)
 
 
+# def item_in_tag(request, tag_slug=None):
+#
+#     items = tag_slug.post_set.order_by('-date_posted')
+#
+#     context = {
+#         'items': items
+#     }
+#     return render(request, 'blog/home.html', context)
+
+
 def home(request):
     context = {
         'posts': Post.objects.all(),
