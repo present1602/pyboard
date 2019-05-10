@@ -1,10 +1,12 @@
+
+
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views.generic import (
     ListView, DetailView, CreateView, UpdateView, DeleteView
 )
-from .models import Post, Category
-
+from .models import Product, Category, Tag
+from cart.forms import AddProductForm
 
 # def item_in_category(request, category_slug=None):
 #
@@ -36,13 +38,13 @@ from .models import Post, Category
 #     return render(request, 'blog/home.html', context)
 
 
-class PostListView(ListView):
-    model = Post
+class ProductListView(ListView):
+    model = Product
     template_name = 'blog/home.html'
-    context_object_name = 'posts'
+    context_object_name = 'products'
 
     def get_context_data(self, *, object_list=None, **kwargs):
-        context = super(PostListView, self).get_context_data(**kwargs)
+        context = super(ProductListView, self).get_context_data(**kwargs)
         context['category_list'] = Category.objects.all()
 
         return context
@@ -54,44 +56,71 @@ class PostListView(ListView):
     # ordering = ['-date_posted']
 
 
-class PostListByCategory(PostListView):
+class ProductListByCategory(ProductListView):
 
     def get_queryset(self):
         slug = self.kwargs['slug']
         # print("slug")
         # print(slug)
         category = Category.objects.get(slug=slug)
-        return Post.objects.filter(category=category).order_by('-date_posted')
-
-    # return Post.objects
+        return Product.objects.filter(category=category).order_by('-date_posted')
 
 
-class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
-    model = Post
+# class PostListByTag(ListView):
+#     print('PostListByTag 실행')
+#     model = Post
+#     template_name = 'blog/home.html'
+#     context_object_name = 'posts'
+#
+#     def get_queryset(self):
+#         print('PostListByTag getqueryset 실행')
+#
+#         slug = self.kwargs['slug']
+#         print("slug")
+#         print(slug)
+#         tag = Tag.objects.get(slug=slug)
+#         return tag.post_set.order_by('-date_posted')
+#
+#     def get_context_data(self, *, object_list=None, **kwargs):
+#         context = super(PostListByTag, self).get_context_data(**kwargs)
+#         context['category_list'] = Category.objects.all()
+#
+#         return context
+
+
+class ProductDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+    model = Product
     success_url = '/'
 
     def test_func(self):
-        post = self.get_object()
-        if self.request.user == post.author:
+        product = self.get_object()
+        if self.request.user == product.author:
             return True
         return False
 
 
-class PostDetailView(DetailView):
-    model = Post
+# class ProductDetailView(DetailView):
+#     model = Product
+
+def product_detail(request, id, slug=None):
+    product = get_object_or_404(Product, id=id, slug=slug)
+    add_to_cart = AddProductForm(initial={'quantity':1})
+    context = {'product': product, 'add_to_cart': add_to_cart}
+    return render(request, 'blog/product_detail.html', context)
 
 
-class PostCreateView(LoginRequiredMixin, CreateView):
-    model = Post
-    fields = ['title', 'content', 'image']
+class ProductCreateView(LoginRequiredMixin, CreateView):
+    model = Product
+    fields = ['title', 'content', 'image', 'price']
 
     def form_valid(self, form):
+        form.instance.slug = form.instance.title
         form.instance.author = self.request.user
         return super().form_valid(form)
 
 
-class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
-    model = Post
+class ProductUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+    model = Product
     fields = ['title', 'content', 'image']
 
     def form_valid(self, form):
@@ -99,8 +128,8 @@ class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         return super().form_valid(form)
 
     def test_func(self):
-        post = self.get_object()
-        if self.request.user == post.author:
+        product = self.get_object()
+        if self.request.user == product.author:
             return True
         return False
 

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 
 <head>
 
@@ -30,7 +30,10 @@
             <ul class="navbar-nav ml-auto">
                 {% if user.is_authenticated %}-->
                 <li>
-                    <a class="nav-item nav-link" href="{% url 'post-create' %}">포스팅</a>
+                    <a class="nav-item nav-link" href="{% url 'product-create' %}">업로드</a>
+                </li>
+                <li>
+                    <a class="nav-item nav-link" href="/cart/">카트</a>
                 </li>
                 <li>
                     <a class="nav-item nav-link" href="{% url 'profile' %}">Profile</a>

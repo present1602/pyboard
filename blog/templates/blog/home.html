@@ -51,28 +51,31 @@
         </div>
 
         <div class="row">
-    {% for post in posts %}
+    {% for product in products %}
 
-          <div class="col-lg-4 col-md-6 mb-4" id="post-card-{{post.pk}}">
+          <div class="col-lg-4 col-md-6 mb-4" id="post-card-{{product.pk}}">
             <div class="card h-100">
-              <a href="#"><img class="card-img-top" src="{{ post.image.url }}"></a>
+              <a href="#"><img class="card-img-top" src="{{ product.image.url }}"></a>
               <div class="card-body">
                 <h4 class="card-title">
-                  <a href="{% url 'post-detail' post.id %}">{{ post.title }}</a>
+<!--                        <p>product.id : {{ product.id }} </p>-->
+<!--                        <p>product.slug : {{ product.slug }} </p>-->
+                  <a href="{{product.get_absolute_url}}">{{ product.title }}</a>
                 </h4>
+                  <p>가격 : {{ product.price }}</p>
                   <!-- <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Amet numquam aspernatur! Lorem ipsum dolor sit amet.</p>-->
                   <img class="rounded-circle article-img" style="width:60px; height:60px;"
-                       src="{{post.author.profile.image.url}}">
+                       src="{{product.author.profile.image.url}}">
                   <div class="media-body">
                       <div class="article-metadata">
-                          <a class="mr-2" href="#">{{ post.author }}</a>
+                          <a class="mr-2" href="#">{{ product.author }}</a>
                           <small class="text-muted">{{ post.date_posted|date:"F d, Y" }}</small>
                       </div>
                   </div>
 
-                  <p>cat : {{ post.category }}</p>
-                  {% for t in post.tags.all %}
-                  <a href="tag.get_absolute_url">#{{ t }}&nbsp; </a>
+                  <p>cat : {{ product.category }}</p>
+                  {% for t in product.tags.all %}
+                  <a href="{{t.get_absolute_url}}">#{{ t }}&nbsp; </a>
                   {% endfor %}
                     <br>
               </div>

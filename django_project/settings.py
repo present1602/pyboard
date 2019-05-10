@@ -30,8 +30,11 @@ ALLOWED_HOSTS = []
 
 # Application definition
 
+CART_ID = 'cart_in_session'
+
 INSTALLED_APPS = [
     'blog',
+    'cart',
     'users.apps.UsersConfig',
     'crispy_forms',
     'django.contrib.admin',
@@ -106,7 +109,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/2.1/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'ko-kr'
 
 TIME_ZONE = 'UTC'
 

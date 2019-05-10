@@ -1,0 +1,51 @@
+{% extends "blog/base.html" %}
+{% block content %}
+
+
+
+<article class="media content-section">
+    <img class="rounded-circle article-img" style="width:60px; height:60px;"
+         src="{{product.author.profile.image.url}}">
+
+
+    <div class="media-body">
+
+        <div class="article-metadata">
+            <a class="mr-2" href="#">{{ product.author }}</a>
+            <small class="text-muted">{{ product.date_posted|date:"F d, Y" }}</small>
+            {% if object.author == user %}
+            <div>
+                <a class="btn btn-secondary btn-sm mt-1 mb1" href="{% url 'product-update' product.id %}">수정</a>
+                <a class="btn btn-danger btn-sm mt-1 mb1" href="{% url 'product-delete' product.id %}">삭제</a>
+            </div>
+            {% endif %}
+        </div>
+        <div class="row pt-3">
+            <div class="col-4">
+                <img src="{{ product.image.url }}" width="120px">
+            </div>
+            <div class="col">
+                <h2 class="article-title">{{ product.title }}</h2>
+                <p>상세설명</p>
+                <p class="article-content">{{ product.content }}</p>
+
+            </div>
+        </div>
+        <form action="{% url 'cart:product_add' product.id %}" method="post">
+            {{ add_to_cart }}
+            {% csrf_token %}
+            <input type="submit" class="btn btn-primary btn-sm" value="카트에 넣기">
+        </form>
+<!--        <p>Tags :&nbsp;-->
+<!--            {% for t in object.tags.all %}-->
+<!--                #{{ t }} &nbsp;-->
+<!--            {% endfor %}-->
+<!--        </p>-->
+    </div>
+    <div id="comment-list">
+
+    </div>
+</article>
+
+
+{% endblock content %}

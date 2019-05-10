@@ -1,0 +1,48 @@
+{% extends 'blog/base.html' %}
+{% load static %}
+
+{% block content %}
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th scope="col">Image</th>
+            <th scope="col">Product</th>
+            <th scope="col">Quantity</th>
+            <th scope="col">Remove</th>
+            <th scope="col">Unit Price</th>
+            <th scope="col">Price</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for item in cart %}
+        <tr>
+            <th scope="row">
+                <a href="{{ item.product.get_absolute_url }}">
+                   <img src="{{ item.product.image.url }}" class="img-thumbnail"
+                   style="width:40px;height:40px">
+                </a>
+            </th>
+            <td>{{ item.product.title }}</td>
+            <td style="width:30$">
+                <form action="{% url 'cart:product_add' item.product.id %}"method="post">
+                    {{ item.quantity_form.quantity }}
+                    {{ item.quantity_form.is_update }}
+                    <input type="submit" class="btn btn-sm" value="업데이트">
+                    {% csrf_token %}
+                </form>
+            </td>
+            <td><a href="{% url 'cart:product_remove' item.product.id %}">Remove</a></td>
+            <td class="num">{{ item.price }}</td>
+            <td class="num">{{ item.total_price }}</td>
+        </tr>
+    {% endfor %}
+        <tr class="total">
+            <td>Total</td>
+            <td colspan="4"></td>
+            <td class="num">{{ cart.get_product_total }}</td>
+        </tr>
+
+    </tbody>
+</table>
+
+{% endblock %}
