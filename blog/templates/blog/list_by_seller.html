@@ -1,0 +1,49 @@
+{% extends "blog/base.html" %}
+{% block content %}
+
+<div class="row">
+
+    <div class="media-body pt-3">
+      <img class="rounded-circle article-img" style="width:60px; height:60px;"
+       src="{{seller.profile.image.url}}">
+      <span class="mr-2 pl-2">{{ seller.username }}</span>
+      <p>{{ seller.email }}</p>
+      <p>판매중인 상품 : {{ items.count }}</p>
+  </div>
+
+
+    <div class="row">
+        {% for product in items %}
+
+        <div class="col-lg-4 col-md-6 mb-4" id="post-card-{{product.pk}}">
+            <div class="card h-100">
+                <a href="#"><img class="card-img-top" src="{{ product.image.url }}"></a>
+                <div class="card-body">
+                    <h4 class="card-title">
+                        <!--                        <p>product.id : {{ product.id }} </p>-->
+                        <!--                        <p>product.slug : {{ product.slug }} </p>-->
+                        <a href="{{product.get_absolute_url}}">{{ product.title }}</a>
+                    </h4>
+                    <p><span style="text-decoration:line-through">{{ product.price }}
+                    </span>
+                        {{product.discount_price}} 원
+                    </p>
+                    <!-- <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Amet numquam aspernatur! Lorem ipsum dolor sit amet.</p>-->
+
+                    <small class="text-muted">{{ product.date_posted|date:"Y년 F d일" }}</small>
+
+                </div>
+            </div>
+        </div>
+
+        {% endfor %}
+
+    </div>
+    <!-- /.row -->
+
+</div>
+<!-- /.row -->
+
+
+
+{% endblock content %}

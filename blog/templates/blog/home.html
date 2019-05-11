@@ -71,7 +71,7 @@
                   <div class="media-body">
                       <img class="rounded-circle article-img" style="width:60px; height:60px;"
                        src="{{product.author.profile.image.url}}">
-                      <a class="mr-2 pl-2" href="">{{ product.author }}</a>
+                      <a class="mr-2 pl-2" href="{% url 'list-by-seller' product.author.id %}">{{ product.author }}</a>
                       <small class="text-muted">{{ post.date_posted|date:"F d, Y" }}</small>
                   </div>
               </div>

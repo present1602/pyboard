@@ -5,8 +5,19 @@ from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views.generic import (
     ListView, DetailView, CreateView, UpdateView, DeleteView
 )
+from django.contrib.auth.models import User
 from .models import Product, Category, Tag
 from cart.forms import AddProductForm
+
+
+def list_by_seller(request, id):
+    seller = User.objects.get(id=id)
+    items = Product.objects.filter(author=seller)
+    context = {'items': items, 'seller': seller}
+    return render(request, 'blog/list_by_seller.html', context)
+    # print("id", id)
+
+
 
 # def item_in_category(request, category_slug=None):
 #
@@ -101,6 +112,8 @@ class ProductDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
 
 # class ProductDetailView(DetailView):
 #     model = Product
+
+
 
 def product_detail(request, id, slug=None):
     product = get_object_or_404(Product, id=id, slug=slug)

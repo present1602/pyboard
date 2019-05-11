@@ -14,6 +14,7 @@ urlpatterns = [
     path('product/<int:pk>/update/', ProductUpdateView.as_view(), name='product-update'),
     path('product/<int:pk>/delete/', ProductDeleteView.as_view(), name='product-delete'),
     path('about/', views.about, name='blog-about'),
+    path('seller/<int:id>/', views.list_by_seller, name='list-by-seller'),
 ]
 
 # pattern(s) tried: ['category\\/(?P<slug>[-a-zA-Z0-9_]+)\\/$']
