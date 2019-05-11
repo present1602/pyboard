@@ -10,6 +10,7 @@ urlpatterns = [
     # path('category/<slug:category_slug>/', views.item_in_category, name='item_in_category'),
     path('category/?P<slug>[가-힣a-zA-Z]/', ProductListByCategory.as_view(), name='item_in_category'),
     path('product/<int:id>/<slug>/', views.product_detail, name='product-detail'),
+    path('product/<int:id>/<slug>/question/', views.product_question, name='product-question'),
     path('product/new/', ProductCreateView.as_view(), name='product-create'),
     path('product/<int:pk>/update/', ProductUpdateView.as_view(), name='product-update'),
     path('product/<int:pk>/delete/', ProductDeleteView.as_view(), name='product-delete'),

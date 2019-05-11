@@ -1,4 +1,5 @@
 {% extends "blog/base.html" %}
+{% load crispy_forms_tags %}
 {% block content %}
 
 
@@ -48,10 +49,32 @@
 <!--            {% endfor %}-->
 <!--        </p>-->
     </div>
-    <div id="comment-list">
-
-    </div>
 </article>
+<div id="questionWrap">
+    <p>상품문의 ({{product.question_set.all.count }})</p>
+    <div class="card my-4">
+        <p class="card-header">상품문의하기</p>
+        <div class="card-body">
+            <form action="{{product.get_absolute_url}}question/" method="post">
+                {% csrf_token %}
+<!--                <div class="form-group">-->
+<!--                    <textarea class="form-control" rows="3"></textarea>-->
+<!--                </div>-->
+                    {{ q_form|crispy }}
+                <button type="submit" class="btn btn-primary">확인</button>
+            </form>
+        </div>
+    </div>
+    {% for q in questions %}
+    <div class="media mb-4">
+        <div class="media-body">
+            {{ q.text }}
+        </div>
+    </div>시
+    <p>by {{ q.author }}, {{ q.created|date:"Y년 F d일 h시 i분"  }}</p>
 
+    {% endfor %}
+
+</div>
 
 {% endblock content %}

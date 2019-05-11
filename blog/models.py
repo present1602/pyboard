@@ -43,7 +43,7 @@ class Product(models.Model):
     category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True)
     # tags = models.ManyToManyField(Tag)
 
-    class Meta:
+    class eta:
         ordering = ['-date_posted']
 
     def __str__(self):
@@ -51,3 +51,15 @@ class Product(models.Model):
 
     def get_absolute_url(self):
         return reverse('product-detail', args=[self.id, self.slug])
+
+
+class Question(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    text = models.TextField()
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
+    created = models.DateTimeField(default=timezone.now)
+
+
+
+
+

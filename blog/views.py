@@ -1,13 +1,14 @@
 
 
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views.generic import (
     ListView, DetailView, CreateView, UpdateView, DeleteView
 )
 from django.contrib.auth.models import User
-from .models import Product, Category, Tag
+from .models import Product, Category, Question, Tag
 from cart.forms import AddProductForm
+from .forms import QuestionForm
 
 
 def list_by_seller(request, id):
@@ -114,12 +115,31 @@ class ProductDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
 #     model = Product
 
 
-
 def product_detail(request, id, slug=None):
+    context = {}
     product = get_object_or_404(Product, id=id, slug=slug)
-    add_to_cart = AddProductForm(initial={'quantity':1})
-    context = {'product': product, 'add_to_cart': add_to_cart}
+    context['add_to_cart'] = AddProductForm(initial={'quantity':1})
+    context['q_form'] = QuestionForm()
+    context['product'] = product
+    context['questions'] = product.question_set.all().order_by('-created')
+
     return render(request, 'blog/product_detail.html', context)
+
+
+def product_question(request, slug, id):
+    # model = Question
+    product = Product.objects.get(id=id)
+
+    if request.method == 'POST':
+        q_form = QuestionForm(request.POST)
+        if q_form.is_valid():
+            question = q_form.save(commit=False)
+            question.product = product
+            question.author = request.user
+            question.save()
+            return redirect('/')
+    else:
+        return redirect('/')
 
 
 class ProductCreateView(LoginRequiredMixin, CreateView):
