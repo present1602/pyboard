@@ -144,7 +144,7 @@ def product_question(request, slug, id):
 
 class ProductCreateView(LoginRequiredMixin, CreateView):
     model = Product
-    fields = ['title', 'content', 'image', 'price']
+    fields = ['title', 'content', 'image', 'price', 'discount_price']
 
     def form_valid(self, form):
         form.instance.slug = form.instance.title
@@ -154,7 +154,7 @@ class ProductCreateView(LoginRequiredMixin, CreateView):
 
 class ProductUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Product
-    fields = ['title', 'content', 'image']
+    fields = ['title', 'content', 'image', 'price', 'discount_price']
 
     def form_valid(self, form):
         form.instance.author = self.request.user
