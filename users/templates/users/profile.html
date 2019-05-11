@@ -2,12 +2,12 @@
 {% load crispy_forms_tags %}
 {% block content %}
     <div class="content-section">
-        <h2 style="padding:20px">회원정보</h2>
+        <h4 style="padding:20px">회원정보</h4>
       <div class="media">
         <img style="width:50px; height:50px" class="rounded-circle account-img" src="{{ user.profile.image.url }}">
         <div class="media-body">
-          <h2 class="account-heading">{{ user.username }}</h2>
-          <p class="text-secondary">{{ user.email }}</p>
+          <h3 class="account-heading pl-3">{{ user.username }}</h3>
+          <p class="text-secondary pl-3">{{ user.email }}</p>
         </div>
       </div>
 

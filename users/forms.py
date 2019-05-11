@@ -6,6 +6,7 @@ from .models import Profile
 
 class UserRegisterForm(UserCreationForm):
     email = forms.EmailField()
+    username = forms.CharField(label='판매자명')
 
     class Meta:
         model = User

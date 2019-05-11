@@ -36,6 +36,7 @@ class Product(models.Model):
     slug = models.SlugField(max_length=200, db_index=True, unique=True,
                             allow_unicode=True, null=True)
     price = models.DecimalField(max_digits=10, decimal_places=0, null=True)
+    discount_price = models.DecimalField(max_digits=10, decimal_places=0, null=True)
     content = models.TextField()
     date_posted = models.DateTimeField(default=timezone.now)
     author = models.ForeignKey(User, on_delete=models.CASCADE)
