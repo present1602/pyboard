@@ -8,6 +8,6 @@ class QuestionForm(forms.ModelForm):
         model = Question
         fields = ['text']
         widgets = {
-            'text':Textarea(attrs={'cols':5, 'rows':3})
+            'text': Textarea(attrs={'cols':5, 'rows':3})
         }
 

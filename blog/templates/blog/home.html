@@ -62,10 +62,16 @@
 <!--                        <p>product.slug : {{ product.slug }} </p>-->
                   <a href="{{product.get_absolute_url}}">{{ product.title }}</a>
                 </h4>
-                  <p><span style="text-decoration:line-through">{{ product.price }}
-                    </span>
-                      {{product.discount_price}} 원
+                  {% if product.discount_price != None %}
+                  <p class="article-title">
+                    <span style="text-decoration:line-through;">
+                        {{ product.price }}원</span> {{ product.discount_price }}원
                   </p>
+                  {% else %}
+                  <p>
+                      {{product.price}} 원
+                  </p>
+                  {% endif %}
                   <!-- <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Amet numquam aspernatur! Lorem ipsum dolor sit amet.</p>-->
 
                   <div class="media-body">

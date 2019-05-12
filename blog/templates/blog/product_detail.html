@@ -2,24 +2,34 @@
 {% load crispy_forms_tags %}
 {% block content %}
 
-
-
 <article class="media content-section">
     <div class="media-body">
+        <h3 class="article-title pt-3">{{ product.title }}</h3>
         <div class="row pt-3">
-            <div class="col-4">
+            <div class="col-5">
                 <img src="{{ product.image.url }}" width="100%">
             </div>
-            <div class="col">
+            <div class="col-7">
+                {% if product.discount_price != None %}
+                <p class="article-title" style="font-size:1.4em">
+                    <span style="text-decoration:line-through;">
+                        {{ product.price }}원</span> {{ product.discount_price }}원
+                </p>
+                {% else %}
+                <p class="article-title" style="font-size:1.8em">
+                    {{ product.price }}원
+                </p>
+                {% endif %}
+                <p style="font-weight:bold font-size:1.5em"> 상세설명</p>
 
-                <h2 class="article-title">{{ product.title }}</h2>
-                <p class="article-title">{{ product.price }}원</p>
-                <p>상세설명</p>
 
-
-                <p class="article-content">{{ product.content }}</p>
-                <small class="text-muted">등록일 : {{ product.date_posted|date:"Y년 F d일" }}</small>
-
+                <p class="article-content" style="font-size:1.3em">{{ product.content }}</p>
+                <p class="text-muted">등록일 : {{ product.date_posted|date:"Y년 F d일" }}</p>
+                <form action="{% url 'cart:product_add' product.id %}" method="post" class="pt-3">
+                    {{ add_to_cart }}
+                    {% csrf_token %}
+                    <input type="submit" class="btn btn-primary btn-sm" value="카트에 넣기">
+                </form>
                 <div class="article-metadata pt-4">
                     <img class="rounded-circle article-img" style="width:60px; height:60px;"
                          src="{{product.author.profile.image.url}}">
@@ -34,11 +44,7 @@
                 </div>
             </div>
         </div>
-        <form action="{% url 'cart:product_add' product.id %}" method="post">
-            {{ add_to_cart }}
-            {% csrf_token %}
-            <input type="submit" class="btn btn-primary btn-sm" value="카트에 넣기">
-        </form>
+
 <!--        <p>Tags :&nbsp;-->
 <!--            {% for t in object.tags.all %}-->
 <!--                #{{ t }} &nbsp;-->
@@ -47,27 +53,24 @@
     </div>
 </article>
 <div id="questionWrap">
-    <p>상품문의 ({{product.question_set.all.count }})</p>
     <div class="card my-4">
-        <p class="card-header">상품문의하기</p>
         <div class="card-body">
             <form action="{{product.get_absolute_url}}question/" method="post">
                 {% csrf_token %}
-<!--                <div class="form-group">-->
-<!--                    <textarea class="form-control" rows="3"></textarea>-->
-<!--                </div>-->
-                    {{ q_form|crispy }}
-                <button type="submit" class="btn btn-primary">확인</button>
+                {{ q_form|crispy }}
+                <button type="submit" class="btn btn-primary">문의하기</button>
             </form>
         </div>
     </div>
+    <p class="card-header">상품문의 ({{ product.question_set.all.count }})</p>
+
     {% for q in questions %}
-    <div class="media mb-4">
-        <div class="media-body">
+    <div class="card-body" style="border-bottom: 2px solid rgba(212,212,212,1)">
+        <div class="media-body" style="font-size:1.3em;">
             {{ q.text }}
         </div>
-    </div>시
-    <p>by {{ q.author }}, {{ q.created|date:"Y년 F d일 h시 i분"  }}</p>
+        <p style="padding:10px 10px 5px"> by {{ q.author }}, {{ q.created|date:"Y년 F d일 h시 i분"  }}</p>
+    </div>
 
     {% endfor %}
 

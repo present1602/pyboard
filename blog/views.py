@@ -128,6 +128,21 @@ def product_detail(request, id, slug=None):
     return render(request, 'blog/product_detail.html', context)
 
 
+def product_delete(request, id, slug=None):
+    product = Product.objects.get(id=id)
+    if product.author != request.user:
+        return render(request, 'blog/forbidden.html')
+
+    if request.method == 'POST':
+        Product.objects.filter(id=id).delete()
+        return redirect('/')
+
+    return render(request, 'blog/product_delete.html', {'product': product})
+
+
+class ProductDetailView(DetailView):
+    model = Product
+
 def product_question(request, slug, id):
     # model = Question
     product = Product.objects.get(id=id)
@@ -139,7 +154,7 @@ def product_question(request, slug, id):
             question.product = product
             question.author = request.user
             question.save()
-            return redirect('/')
+            return redirect('product-detail', id=id, slug=slug)
     else:
         return redirect('/')
 
@@ -149,7 +164,7 @@ class ProductCreateView(LoginRequiredMixin, CreateView):
     fields = ['title', 'content', 'image', 'price', 'discount_price']
 
     def form_valid(self, form):
-        form.instance.slug = form.instance.title
+        form.instance.slug = form.instance.title.replace(' ', '-')
         form.instance.author = self.request.user
         return super().form_valid(form)
 
@@ -168,8 +183,5 @@ class ProductUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
             return True
         return False
 
-
-def about(request):
-    return render(request, 'blog/about.html', {'title': 'About'})
 
 
