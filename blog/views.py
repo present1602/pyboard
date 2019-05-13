@@ -6,9 +6,9 @@ from django.views.generic import (
     ListView, DetailView, CreateView, UpdateView, DeleteView
 )
 from django.contrib.auth.models import User
-from .models import Product, Category, Question, Tag
+from .models import Product, Category, Qna, Tag
 from cart.forms import AddProductForm
-from .forms import QuestionForm
+from .forms import QnaForm
 
 
 def list_by_seller(request, id):
@@ -121,9 +121,9 @@ def product_detail(request, id, slug=None):
     context = {}
     product = get_object_or_404(Product, id=id, slug=slug)
     context['add_to_cart'] = AddProductForm(initial={'quantity':1})
-    context['q_form'] = QuestionForm()
+    context['q_form'] = QnaForm()
     context['product'] = product
-    context['questions'] = product.question_set.all().order_by('-created')
+    context['questions'] = product.qna_set.all().order_by('-created')
 
     return render(request, 'blog/product_detail.html', context)
 
@@ -136,27 +136,34 @@ def product_delete(request, id, slug=None):
     if request.method == 'POST':
         Product.objects.filter(id=id).delete()
         return redirect('/')
-
     return render(request, 'blog/product_delete.html', {'product': product})
-
 
 class ProductDetailView(DetailView):
     model = Product
 
-def product_question(request, slug, id):
-    # model = Question
+def product_qna(request, slug, id):
+    model = Qna
     product = Product.objects.get(id=id)
 
     if request.method == 'POST':
-        q_form = QuestionForm(request.POST)
+        q_form = QnaForm(request.POST)
         if q_form.is_valid():
-            question = q_form.save(commit=False)
-            question.product = product
-            question.author = request.user
-            question.save()
+            qna = q_form.save(commit=False)
+            qna.product = product
+            reply_id = request.POST.get('qna_id')
+            text = request.POST.get('text')
+            # print('reply_id : ', reply_id)
+            # print('text : ', text)
+            qna_qs = None
+            if reply_id:
+                qna_qs = Qna.objects.get(id=reply_id)
+            qna = Qna.objects.create(product=product, text=text, author=request.user, reply=qna_qs)
+            qna.save()
             return redirect('product-detail', id=id, slug=slug)
-    else:
-        return redirect('/')
+        return redirect('product-detail', id=id, slug=slug)
+    else :
+        return render(request, 'blog/forbidden.html')
+
 
 
 class ProductCreateView(LoginRequiredMixin, CreateView):

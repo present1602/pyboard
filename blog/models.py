@@ -53,13 +53,17 @@ class Product(models.Model):
         return reverse('product-detail', args=[self.id, self.slug])
 
 
-class Question(models.Model):
+class Qna(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     text = models.TextField()
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     created = models.DateTimeField(default=timezone.now)
+    reply = models.ForeignKey('Qna', null=True, related_name='replies', on_delete=models.CASCADE)
 
+    class Meta:
+        ordering = ['-created']
 
-
+    def __str__(self):
+        return self.text
 
 

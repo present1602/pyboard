@@ -5,6 +5,10 @@
 <article class="media content-section">
     <div class="media-body">
         <h3 class="article-title pt-3">{{ product.title }}</h3>
+        {% if product.author == user %}
+        <a class="btn btn-secondary btn-sm mt-1" href="./update">업데이트</a>
+        <a class="btn btn-danger btn-sm mt-1" href="./delete">삭제</a>
+        {% endif %}
         <div class="row pt-3">
             <div class="col-5">
                 <img src="{{ product.image.url }}" width="100%">
@@ -25,22 +29,18 @@
 
                 <p class="article-content" style="font-size:1.3em">{{ product.content }}</p>
                 <p class="text-muted">등록일 : {{ product.date_posted|date:"Y년 F d일" }}</p>
+                {% if product.author != user%}
                 <form action="{% url 'cart:product_add' product.id %}" method="post" class="pt-3">
                     {{ add_to_cart }}
                     {% csrf_token %}
                     <input type="submit" class="btn btn-primary btn-sm" value="카트에 넣기">
                 </form>
+                {% endif %}
                 <div class="article-metadata pt-4">
+                    <a href="{% url 'list-by-seller' product.author.id %}">
                     <img class="rounded-circle article-img" style="width:60px; height:60px;"
                          src="{{product.author.profile.image.url}}">
-
-                    <a class="mr-2" href="#">{{ product.author }}</a>
-                    {% if object.author == user %}
-                    <div>
-                        <a class="btn btn-secondary btn-sm mt-1 mb1" href="{% url 'product-update' product.id %}">수정</a>
-                        <a class="btn btn-danger btn-sm mt-1 mb1" href="{% url 'product-delete' product.id %}">삭제</a>
-                    </div>
-                    {% endif %}
+                    {{ product.author }}</a>
                 </div>
             </div>
         </div>
@@ -52,28 +52,57 @@
 <!--        </p>-->
     </div>
 </article>
-<div id="questionWrap">
+<div id="qnaWrap">
     <div class="card my-4">
         <div class="card-body">
-            <form action="{{product.get_absolute_url}}question/" method="post">
+            <form action="{{product.get_absolute_url}}qna/" method="post">
                 {% csrf_token %}
                 {{ q_form|crispy }}
                 <button type="submit" class="btn btn-primary">문의하기</button>
             </form>
         </div>
     </div>
-    <p class="card-header">상품문의 ({{ product.question_set.all.count }})</p>
+    <p class="card-header">상품문의 ({{ product.qna_set.all.count }})</p>
 
     {% for q in questions %}
     <div class="card-body" style="border-bottom: 2px solid rgba(212,212,212,1)">
         <div class="media-body" style="font-size:1.3em;">
-            {{ q.text }}
+            <p>{{ q.text }}</p>
         </div>
         <p style="padding:10px 10px 5px"> by {{ q.author }}, {{ q.created|date:"Y년 F d일 h시 i분"  }}</p>
+        {% if q.reply %}
+        <p>답변 : {{q.reply.text}} <span>by {{q.reply.author}}, {{ q.reply.created|date:"Y년 F d일 h시 i분"  }}</span></p>
+        {% endif %}
+
+        {% if product.author == user %}
+            <form action="{{product.get_absolute_url}}qna/" method="post">
+                {% csrf_token %}
+
+                <input type="hidden" name="qna_id" value="{{q.id}}">
+                {{ q_form|crispy }}
+                <button type="submit" class="btn btn-primary">답변하기</button>
+            </form>
+
+        {% endif %}
     </div>
-
     {% endfor %}
-
 </div>
+
+<!--<form method="post">-->
+<!--    <input type="hidden" name="csrfmiddlewaretoken" value="W5vrhRLdFWDFnqiBvqbTGZ35NmIbfCcEHs8ObEnpGxmYflJaApLN0BITiIhq2HwI">-->
+<!--    <input type="hidden" name="qna_id" value="1">-->
+
+
+<!--    <div id="div_id_text" class="form-group">-->
+<!--        <label for="id_text" class="col-form-label  requiredField">-->
+<!--        Text<span class="asteriskField">*</span> </label>-->
+<!--        <div class="">-->
+<!--            <textarea name="text" cols="5" rows="3" placeholder="내용을 입력해주세요" class="textarea form-control form-control" required id="id_text">-->
+<!--            </textarea>-->
+<!--        </div>-->
+<!--    </div>-->
+
+<!--    <button type="submit" class="btn btn-primary">답변하기</button>-->
+<!--</form>-->
 
 {% endblock content %}
