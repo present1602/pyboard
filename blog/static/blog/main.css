@@ -3,7 +3,9 @@ body {
   color: #333333;
   margin-top: 5rem;
 }
-
+#testid{
+  color: red
+}
 h1, h2, h3, h4, h5, h6 {
   color: #444444;
 }
@@ -81,4 +83,34 @@ a.article-title:hover {
 
 .account-heading {
   font-size: 2.5rem;
+}
+
+/* 20201014 추가 */
+
+#navbarResponsive ul {
+  font-size: 13px;
+}
+#navbarResponsive ul li{
+  margin: 0 10px;
+}
+
+#main_logo{
+  font-size: 18px;
+}
+
+.list-group > a{
+  font-size:13px;
+}
+
+.table-striped th {
+  font-size: 14px;
+}
+.table-striped td{
+  font-size: 13px;
+  vertical-align: middle;
+}
+
+#cart_total{
+  text-align: center;
+  font-weight: bold;
 }
