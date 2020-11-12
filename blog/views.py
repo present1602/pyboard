@@ -168,7 +168,7 @@ def product_qna(request, slug, id):
 
 class ProductCreateView(LoginRequiredMixin, CreateView):
     model = Product
-    fields = ['title', 'content', 'image', 'price', 'discount_price']
+    fields = ['title', 'content', 'image', 'price', 'discount_price', 'category']
 
     def form_valid(self, form):
         form.instance.slug = form.instance.title.replace(' ', '-')

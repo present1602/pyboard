@@ -17,18 +17,46 @@
   <!-- Custom styles for this template -->
   <link rel="stylesheet" type="text/css" href="{% static 'blog/main.css' %}">
   <link rel="stylesheet" type="text/css" href="{% static 'blog/shoptemplate.css' %}">
+<style>
+
+li {list-style-type: none;}
+#top-nav-box {
+  /* position: absolute;
+  right: 0; */
+  display: inline-block;
+  float: right;
+}
+#top-nav-box > ul{
+  display:flex; flex-direction: row; margin:0 10px; font-size: 15px;
+}
+#top-nav-box > ul > li > a{
+  color:#fff;
+}
+#nav-wrap
+#main_logo{
+  float:left; color:gray;
+}
+/* #top-nav *{
+  outline:1px solid green
+} */
+
+</style>
+
 </head>
 
 <body>
 
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top" style="border-radius: 0;">
-    <div class="container">
-        <a class="navbar-brand" href="/" id="main_logo">Django Market</a>
+<nav class="bg-dark fixed-top" style="border-radius: 0" id="top-nav">
+
+    <div class="container" id="nav-wrap" style="position:relative;">
+      <span style="">
+        <a class="" href="/" id="main_logo">Django Market</a>
+      </span>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
-        <div class="collapse navbar-collapse" id="navbarResponsive">
-            <ul class="navbar-nav ml-auto">
+        <div class="" id="top-nav-box">
+            <ul class="">
                 {% if user.is_authenticated %}
                 <li>
                     <a class="nav-item nav-link" href="{% url 'product-create' %}">업로드</a>
